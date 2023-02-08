@@ -1,4 +1,4 @@
-package br.comdicasdeumdev.api.domain;
+package br.com.dicasdeumdev.api.domain;
 
 import lombok.*;
 
@@ -9,10 +9,13 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "\"user\"")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+
     private String name;
     @Column(unique = true)
     private String email;
