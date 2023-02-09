@@ -1,6 +1,6 @@
 package br.com.dicasdeumdev.api.resources;
 
-import br.com.dicasdeumdev.api.domain.User;
+
 import br.com.dicasdeumdev.api.domain.dto.UserDto;
 import br.com.dicasdeumdev.api.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -17,12 +17,13 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/user")
 public class UserResource {
 
+    public static final String ID = "/{id}";
     @Autowired
     private ModelMapper mapper;
     @Autowired
     private UserService service;
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ID)
     public ResponseEntity<UserDto> findById(@PathVariable Integer id) {
         return ResponseEntity.ok().body(mapper.map(service.findById(id),UserDto.class));
     }
@@ -35,12 +36,18 @@ public class UserResource {
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody UserDto obj) {
         URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/{id}").buildAndExpand(service.create(obj).getId()).toUri();
+                .fromCurrentRequest().path(ID).buildAndExpand(service.create(obj).getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = ID)
     public ResponseEntity<UserDto>update(@PathVariable Integer id, @RequestBody UserDto obj) {
         obj.setId(id);
         return ResponseEntity.ok().body(mapper.map(service.update(obj), UserDto.class));
+    }
+
+    @DeleteMapping(value = ID)
+    public ResponseEntity<UserDto>delete(@PathVariable Integer id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
