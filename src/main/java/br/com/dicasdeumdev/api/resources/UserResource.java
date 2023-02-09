@@ -1,5 +1,6 @@
 package br.com.dicasdeumdev.api.resources;
 
+import br.com.dicasdeumdev.api.domain.User;
 import br.com.dicasdeumdev.api.domain.dto.UserDto;
 import br.com.dicasdeumdev.api.services.UserService;
 import org.modelmapper.ModelMapper;
@@ -31,12 +32,15 @@ public class UserResource {
         return ResponseEntity.ok().body(service.findAll()
                 .stream().map(x -> mapper.map(x, UserDto.class)).collect(Collectors.toList()));
     }
-
     @PostMapping
     public ResponseEntity<UserDto> create(@RequestBody UserDto obj) {
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest().path("/{id}").buildAndExpand(service.create(obj).getId()).toUri();
         return ResponseEntity.created(uri).build();
-
+    }
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UserDto>update(@PathVariable Integer id, @RequestBody UserDto obj) {
+        obj.setId(id);
+        return ResponseEntity.ok().body(mapper.map(service.update(obj), UserDto.class));
     }
 }
